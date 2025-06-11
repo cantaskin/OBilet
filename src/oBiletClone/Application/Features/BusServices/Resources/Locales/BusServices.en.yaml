@@ -1,0 +1,2 @@
+BusServiceNotExists: Bus service don't exists.
+BeAValidStartTime: Start time must be at least 1 hour from now and within the next year.

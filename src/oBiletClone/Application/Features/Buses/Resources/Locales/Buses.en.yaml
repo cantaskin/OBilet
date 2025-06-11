@@ -1,0 +1,3 @@
+BusNotExists: Bus don't exists.
+BusNumberPlateExists: Bus number plate exists when creating.
+BusNumberPlateNotExistsWhenSelected: Bus number plate not exists when selected.
