@@ -9,6 +9,7 @@ OBiletClone, .NET 8 ile geliştirilmiş otobüs bileti rezervasyon sistemi.
 1. **Projeyi klonlayın**
 
 git clone https://github.com/kullaniciadi/OBiletClone.git
+
 cd OBiletClone
 
 2. **Docker ile tüm servisleri başlatın**
