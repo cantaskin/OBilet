@@ -14,7 +14,7 @@ using static Application.Features.Tickets.Constants.TicketsOperationClaims;
 
 namespace Application.Features.Tickets.Commands.Create;
 
-public class CreateTicketCommand : IRequest<CreatedTicketResponse>,  ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest //ISecuredRequest,
+public class CreateTicketCommand : IRequest<CreatedTicketResponse>,  ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest, ISecuredRequest
 {
     public required Guid UserId { get; set; }
     public required int BusServiceId { get; set; }
