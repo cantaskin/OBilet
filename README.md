@@ -29,6 +29,7 @@ Buradan API endpoint'lerini test edebilir ve kullanımı detaylıca inceleyebili
 Admin User'ın 
 
 email = admin@admin.io
+
 password : Passw0rd!
 
 şeklinde olmalı. Aldığını token'ı sağ üstteki authorize butonuna tıkladıktan sonra girebilirsiniz. Token expired olana kadar admin yetkileriyle uygulamayı kullanabilirsiniz. 
