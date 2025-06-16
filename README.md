@@ -49,7 +49,7 @@ Otobüs oluşturmak için gerekli alan bilgileri:
 | `doorGapSize` | integer | Kapı boşluğu kaç sıra yer kaplıyor? (örneğin: 1) |
 | `column` | integer | Koltuk düzenindeki sütun sayısı (yan yana koltuk sayısı). |
 | `row` | integer | Koltuk düzenindeki toplam satır sayısı. |
-| `personelIds` | array of integers | Bu otobüse atanacak personel ID'leri. Birden fazla ID içerebilir. |
+| `personelIds` | array of integers | Bu otobüse atanacak personel ID'leri. Birden fazla ID içerebilir. Bu field hiç yazılmayabilir de. |
 
 ### ✅ Örnek Request:
 
