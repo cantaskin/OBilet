@@ -16,9 +16,13 @@ public class UpdateSeatCommand : IRequest<UpdatedSeatResponse>, ISecuredRequest,
 {
     public int Id { get; set; }
     public required int BusId { get; set; }
-    public required int BusInsideSeatId { get; set; }
-    public int? NeighborSeatId { get; set; }
-    public int? UserId { get; set; }
+    public required int LocalSeatId { get; set; }
+
+    //Neighbour Seat But Local Type Yani BusInsideSeatId
+    public int? LeftSeatId { get; set; }
+    public int? RightSeatId { get; set; }
+    public int? TopSeatId { get; set; }
+    public int? BottomSeatId { get; set; }
 
     public string[] Roles => [Admin, Write, SeatsOperationClaims.Update];
 
@@ -44,6 +48,26 @@ public class UpdateSeatCommand : IRequest<UpdatedSeatResponse>, ISecuredRequest,
         {
             Seat? seat = await _seatRepository.GetAsync(predicate: s => s.Id == request.Id, cancellationToken: cancellationToken);
             await _seatBusinessRules.SeatShouldExistWhenSelected(seat);
+
+            await _seatBusinessRules.LocalSeatIdShouldntExistWhenCreated(request.LocalSeatId, request.BusId, cancellationToken);
+
+            if (seat!.LeftSeatId != null)
+            {
+                await _seatBusinessRules.LocalSeatIdShouldExist((int)request.LeftSeatId, request.BusId, cancellationToken);
+            }
+            if (seat.RightSeatId != null)
+            {
+                await _seatBusinessRules.LocalSeatIdShouldExist((int)request.RightSeatId, request.BusId, cancellationToken);
+            }
+            if (seat.TopSeatId != null)
+            {
+                await _seatBusinessRules.LocalSeatIdShouldExist((int)request.TopSeatId, request.BusId, cancellationToken);
+            }
+            if (seat.BottomSeatId != null)
+            {
+                await _seatBusinessRules.LocalSeatIdShouldExist((int)request.BottomSeatId, request.BusId, cancellationToken);
+            }
+
             seat = _mapper.Map(request, seat);
 
             await _seatRepository.UpdateAsync(seat!);

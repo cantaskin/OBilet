@@ -39,4 +39,27 @@ public class SeatBusinessRules : BaseBusinessRules
         );
         await SeatShouldExistWhenSelected(seat);
     }
+
+    public async Task LocalSeatIdShouldntExistWhenCreated(int localSeatId, int busId, CancellationToken cancellationToken)
+    {
+        Seat? seat = await _seatRepository.GetAsync(
+            predicate: s => s.LocalSeatId == localSeatId && s.BusId == busId,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+        if (seat != null)
+            await throwBusinessException(SeatsBusinessMessages.LocalSeatIdAlreadyExists);
+    }
+
+
+    public async Task LocalSeatIdShouldExist(int localSeatId, int busId, CancellationToken cancellationToken)
+    {
+        Seat? seat = await _seatRepository.GetAsync(
+            predicate: s => s.LocalSeatId == localSeatId && s.BusId == busId,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+        if (seat == null)
+            await throwBusinessException(SeatsBusinessMessages.LocalSeatIdNotExists);
+    }
 }
