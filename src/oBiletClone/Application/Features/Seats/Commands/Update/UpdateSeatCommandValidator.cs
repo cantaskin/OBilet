@@ -8,6 +8,5 @@ public class UpdateSeatCommandValidator : AbstractValidator<UpdateSeatCommand>
     {
         RuleFor(c => c.Id).NotEmpty();
         RuleFor(c => c.BusId).NotEmpty();
-        RuleFor(c => c.BusInsideSeatId).NotEmpty();
     }
 }

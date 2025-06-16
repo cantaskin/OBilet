@@ -7,6 +7,5 @@ public class CreateSeatCommandValidator : AbstractValidator<CreateSeatCommand>
     public CreateSeatCommandValidator()
     {
         RuleFor(c => c.BusId).NotEmpty();
-        RuleFor(c => c.BusInsideSeatId).NotEmpty();
     }
 }

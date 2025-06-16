@@ -17,8 +17,6 @@ public class CreateSeatCommand : IRequest<CreatedSeatResponse>, ISecuredRequest,
 {
     public required int BusId { get; set; }
     public required int LocalSeatId { get; set; }
-
-    //Neighbour Seat But Local Type Yani BusInsideSeatId
     public int? LeftSeatId { get; set; }
     public int? RightSeatId { get; set; }
     public int? TopSeatId { get; set; }
