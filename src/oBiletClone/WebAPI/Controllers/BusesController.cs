@@ -25,13 +25,13 @@ public class BusesController : BaseController
 
 
 
-    [HttpPut]
-    public async Task<ActionResult<UpdatedBusResponse>> Update([FromBody] UpdateBusCommand command)
-    {
-        UpdatedBusResponse response = await Mediator.Send(command);
+    // [HttpPut]
+    // public async Task<ActionResult<UpdatedBusResponse>> Update([FromBody] UpdateBusCommand command)
+    // {
+    //     UpdatedBusResponse response = await Mediator.Send(command);
 
-        return Ok(response);
-    }
+    //     return Ok(response);
+    // }
 
 
     [HttpPut("Personel-Assign")]
