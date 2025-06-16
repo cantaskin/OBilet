@@ -19,16 +19,16 @@ using Nest;
 
 namespace Application.Features.BusServices.Commands.CreateWithStationIds;
 
-public class CreateBusServiceWithStationIdsCommand : MediatR.IRequest<CreateBusServiceWithStationIdsResponse>, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest // ISecuredRequest,
+public class CreateBusServiceWithStationIdsCommand : MediatR.IRequest<CreateBusServiceWithStationIdsResponse>, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest, ISecuredRequest
 {
     public required int BusId { get; set; }
-    public required List<int> StationIds { get; set; } //Burada sýrasýyla vermek zorundayýz.
+    public required List<int> StationIds { get; set; } //Burada sï¿½rasï¿½yla vermek zorundayï¿½z.
     public required DateTime StartTime { get; set; }
     public required DateTime FinishTime { get; set; }
     public string[] Roles => [Admin, Write, BusServicesOperationClaims.Create];
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string[]? CacheGroupKey => ["GetBusServices"];
+    public string[]? CacheGroupKey => ["GetBusServices","GetSeats"];
 
     public class CreateBusServiceCommandHandler : IRequestHandler<CreateBusServiceWithStationIdsCommand, CreateBusServiceWithStationIdsResponse>
     {
@@ -89,7 +89,7 @@ public class CreateBusServiceWithStationIdsCommand : MediatR.IRequest<CreateBusS
                         {
                             Station = station!,
                             StationId = station!.Id,
-                            Order = k - i // sýfýrdan baþlayarak sýrayý veriyoruz,
+                            Order = k - i // sï¿½fï¿½rdan baï¿½layarak sï¿½rayï¿½ veriyoruz,
                         });
                     }
 
@@ -108,14 +108,14 @@ public class CreateBusServiceWithStationIdsCommand : MediatR.IRequest<CreateBusS
 
             await _busServiceRepository.AddRangeAsync(busServices, cancellationToken);
             
-            rootId = busServices[stationCount - 2].Id; // Ilk sýranýn sonuncusu root olmalý.
+            rootId = busServices[stationCount - 2].Id; // Ilk sï¿½ranï¿½n sonuncusu root olmalï¿½.
 
             busServices.ForEach(bs =>
             {
                 bs.RootId = rootId;
 
                 if(bs.Id == rootId)
-                    bs.Name += $" Baþlangýç-Bitiþ Saati: {request.StartTime}-{request.FinishTime}";
+                    bs.Name += $" Baï¿½langï¿½ï¿½-Bitiï¿½ Saati: {request.StartTime}-{request.FinishTime}";
                 
                 bs.BusServiceStations.ForEach(bss =>
                 {

@@ -50,7 +50,7 @@ public class BusBusinessRules : BaseBusinessRules
             cancellationToken: cancellationToken
         );
         
-        if(bus == null)
+        if(bus != null)
             await throwBusinessException(BusesBusinessMessages.BusNumberPlateExistsWhenCreated);
     }
 

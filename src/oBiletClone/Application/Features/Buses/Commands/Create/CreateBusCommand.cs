@@ -16,7 +16,7 @@ namespace Application.Features.Buses.Commands.Create;
 public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest, ISecuredRequest
 {
     public required string NumberPlate { get; set; } 
-    public required bool HasOneSeat { get; set; }
+    public required bool HasOneSeat { get; set; } = false; // Tekli koltuk var m��
     public int DoorGapRowIndex { get; set; } = 7;
     public int DoorGapSize { get; set; } = 1;
     public int Column { get; set; } = 4;
@@ -54,6 +54,26 @@ public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverReque
             Bus bus = _mapper.Map<Bus>(request);
             
             await _busBusinessRules.BusPlateShouldntExistWhenCreated(request.NumberPlate, cancellationToken);
+            
+            if(request.Row < 1 || request.Row > 30)
+                throw new ArgumentOutOfRangeException(nameof(request.Row), "Row must be between 1 and 30.");
+
+            if(request.Column < 1 || request.Column > 4)
+                throw new ArgumentOutOfRangeException(nameof(request.Column), "Column must be between 1 and 4.");
+                
+            if (request.DoorGapRowIndex < 0 || request.DoorGapRowIndex >= request.Row)
+                throw new ArgumentOutOfRangeException(nameof(request.DoorGapRowIndex), "DoorGapRowIndex must be between 0 and RowIndex.");
+
+            if(request.DoorGapSize < 1 || request.DoorGapSize > 2)
+                throw new ArgumentOutOfRangeException(nameof(request.DoorGapSize), "DoorGapSize must be between 1 and 2.");
+
+            if (request.HasOneSeat && request.Column < 2)
+                throw new ArgumentException("If HasOneSeat is true, Column must be greater than 2.", nameof(request.Column));
+
+            if (request.Row / request.Column < 1)
+                throw new ArgumentException("Row must be greater than or equal to Column.", nameof(request.Row));
+
+
 
             //await _busBusinessRules.BusPlateShouldntExistWhenCreated(request.NumberPlate,cancellationToken);
 
