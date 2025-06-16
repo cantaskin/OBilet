@@ -18,11 +18,10 @@ namespace Application.Features.BusServices.Commands.Update;
 public class UpdateBusServiceCommand : IRequest<UpdatedBusServiceResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
 
-    //Bütün hepsinin starttime, finishtime'ý deðiþtirilebilir ama diðerlerine girmemesi lazým.
+    //Bï¿½tï¿½n hepsinin starttime, finishtime'ï¿½ deï¿½iï¿½tirilebilir ama diï¿½erlerine girmemesi lazï¿½m.
     public int Id { get; set; }
     public required DateTime StartTime { get; set; }
     public required DateTime FinishTime { get; set; }
-    public required decimal BasePrice { get; set; }
     public string[] Roles => [Admin, Write, BusServicesOperationClaims.Update];
     public bool BypassCache { get; }
     public string? CacheKey { get; }
@@ -78,7 +77,7 @@ public class UpdateBusServiceCommand : IRequest<UpdatedBusServiceResponse>, ISec
                 
             Dictionary<int, int> ourStationIdOrderDictionary = await _busServiceStationService.GetStationIdOrderDictionary(busService!.Id, cancellationToken);
 
-            //Bunun var olup olmadýðýný kontrol etmem lazým.
+            //Bunun var olup olmadï¿½ï¿½ï¿½nï¿½ kontrol etmem lazï¿½m.
 
             var startOrder = ourStationIdOrderDictionary[fromStation.Id];
             var finishOrder = ourStationIdOrderDictionary[toStation.Id];
@@ -103,8 +102,8 @@ public class UpdateBusServiceCommand : IRequest<UpdatedBusServiceResponse>, ISec
                 if (startItemOrder < finishOrder && finishItemOrder > startOrder)
                 {
                     throw new BusinessException("Bus Service conflict error");
-                    /*bu durumu tekrar düþünmem lazým. 4 durum var hepsini kontrol etmem lazým benden büyük bir sefer de olabilir benden ufak da olabilir.
-                     Veya order olarak daha büyük baþladýysa o daha eski olmasý gerekir. Daha sonraysa sonra olmasý lazým falan.*/
+                    /*bu durumu tekrar dï¿½ï¿½ï¿½nmem lazï¿½m. 4 durum var hepsini kontrol etmem lazï¿½m benden bï¿½yï¿½k bir sefer de olabilir benden ufak da olabilir.
+                     Veya order olarak daha bï¿½yï¿½k baï¿½ladï¿½ysa o daha eski olmasï¿½ gerekir. Daha sonraysa sonra olmasï¿½ lazï¿½m falan.*/
                 }
 
                 if (startItemOrder < finishOrder && finishItemOrder < startOrder && startOrder < startItemOrder)

@@ -15,5 +15,4 @@ public class GetListBusServiceListItemDto : IDto
     public DateTime StartTime { get; set; }
     public DateTime FinishTime { get; set; }
 
-    public decimal BasePrice { get; set; }
 }

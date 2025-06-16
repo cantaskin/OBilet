@@ -40,6 +40,8 @@ public class CreateStationCommand : IRequest<CreatedStationResponse>,  ICacheRem
         {
             Station station = _mapper.Map<Station>(request);
 
+            await _stationBusinessRules.StationNameShouldntExistWhenCreated(request.Name, cancellationToken);
+            
             await _stationRepository.AddAsync(station);
 
             CreatedStationResponse response = _mapper.Map<CreatedStationResponse>(station);

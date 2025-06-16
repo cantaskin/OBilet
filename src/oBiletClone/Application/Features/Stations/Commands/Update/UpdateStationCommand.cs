@@ -16,6 +16,7 @@ public class UpdateStationCommand : IRequest<UpdatedStationResponse>, ISecuredRe
 {
     public int Id { get; set; }
 
+    public string Name { get; set; }
     public string[] Roles => [Admin, Write, StationsOperationClaims.Update];
 
     public bool BypassCache { get; }
@@ -39,7 +40,10 @@ public class UpdateStationCommand : IRequest<UpdatedStationResponse>, ISecuredRe
         public async Task<UpdatedStationResponse> Handle(UpdateStationCommand request, CancellationToken cancellationToken)
         {
             Station? station = await _stationRepository.GetAsync(predicate: s => s.Id == request.Id, cancellationToken: cancellationToken);
+
             await _stationBusinessRules.StationShouldExistWhenSelected(station);
+            await _stationBusinessRules.StationNameShouldntExistWhenCreated(request.Name, cancellationToken);
+
             station = _mapper.Map(request, station);
 
             await _stationRepository.UpdateAsync(station!);

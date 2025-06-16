@@ -39,4 +39,15 @@ public class StationBusinessRules : BaseBusinessRules
         );
         await StationShouldExistWhenSelected(station);
     }
+
+    public async Task StationNameShouldntExistWhenCreated(string name, CancellationToken cancellationToken)
+    {
+        Station? station = await _stationRepository.GetAsync(
+            predicate: s => s.Name == name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+        if (station != null)
+            await throwBusinessException(StationsBusinessMessages.StationNameExists);
+    }
 }

@@ -13,7 +13,7 @@ using static Application.Features.Buses.Constants.BusesOperationClaims;
 
 namespace Application.Features.Buses.Commands.Create;
 
-public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest // ISecuredRequest,
+public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest, ISecuredRequest
 {
     public required string NumberPlate { get; set; } 
     public required bool HasOneSeat { get; set; }
@@ -23,7 +23,7 @@ public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverReque
     public int Row { get; set; } = 15;
     public List<int>? PersonelIds { get; set; }
     
-    //Personel için buraya bir bölüm ayrýlabilir belki ya da personeli kaydetip burada update kýsmýnda yapýlabilir. 
+    //Personel iï¿½in buraya bir bï¿½lï¿½m ayrï¿½labilir belki ya da personeli kaydetip burada update kï¿½smï¿½nda yapï¿½labilir. 
     public string[] Roles => [Admin, Write, BusesOperationClaims.Create];
     public bool BypassCache { get; }
     public string? CacheKey { get; }
@@ -52,15 +52,12 @@ public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverReque
         public async Task<CreatedBusResponse> Handle(CreateBusCommand request, CancellationToken cancellationToken)
         {
             Bus bus = _mapper.Map<Bus>(request);
-            request.NumberPlate = request.NumberPlate.ToUpper();
-
-            //Burada plaka formatý kontrolu de yapmam lazým.
             
+            await _busBusinessRules.BusPlateShouldntExistWhenCreated(request.NumberPlate, cancellationToken);
+
             //await _busBusinessRules.BusPlateShouldntExistWhenCreated(request.NumberPlate,cancellationToken);
 
             bus = await _busRepository.AddAsync(bus, cancellationToken);
-
-
 
             if (request.PersonelIds != null)
             {
@@ -84,7 +81,7 @@ public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverReque
             {
                 for (int column = 0; column < request.Column; column++)
                 {
-                    if (request.HasOneSeat && column == 1 && row != request.Row - 1) // En arkadaki koltuklar hariç, orta boþluk için tekli ise eðer
+                    if (request.HasOneSeat && column == 1 && row != request.Row - 1) // En arkadaki koltuklar hariï¿½, orta boï¿½luk iï¿½in tekli ise eï¿½er
                     {
                         seats[row, column] = null;
                         continue;
@@ -119,15 +116,15 @@ public class CreateBusCommand : IRequest<CreatedBusResponse>, ICacheRemoverReque
                     if (column > 0 && seats[row, column - 1] != null)
                         currentSeat.LeftSeatId = seats[row, column - 1]!.LocalSeatId;
 
-                    // Saðýndaki koltuk
+                    // Saï¿½ï¿½ndaki koltuk
                     if (column < request.Column - 1 && seats[row, column + 1] != null)
                         currentSeat.RightSeatId = seats[row, column + 1]!.LocalSeatId;
 
-                    // Üstündeki koltuk
+                    // ï¿½stï¿½ndeki koltuk
                     if (row > 0 && seats[row - 1, column] != null)
                         currentSeat.TopSeatId = seats[row - 1, column]!.LocalSeatId;
 
-                    // Altýndaki koltuk
+                    // Altï¿½ndaki koltuk
                     if (row < request.Row - 1 && seats[row + 1, column] != null)
                         currentSeat.BottomSeatId = seats[row + 1, column]!.LocalSeatId;
 

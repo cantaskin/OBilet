@@ -49,7 +49,7 @@ public class BusBusinessRules : BaseBusinessRules
             enableTracking: false,
             cancellationToken: cancellationToken
         );
-
+        
         if(bus == null)
             await throwBusinessException(BusesBusinessMessages.BusNumberPlateExistsWhenCreated);
     }
