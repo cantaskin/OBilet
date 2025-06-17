@@ -9,6 +9,5 @@ public class CreatePersonelCommandValidator : AbstractValidator<CreatePersonelCo
         RuleFor(c => c.FirstName).NotEmpty();
         RuleFor(c => c.LastName).NotEmpty();
         RuleFor(c => c.NationalId).NotEmpty();
-        RuleFor(c => c.IsMale).NotEmpty();
     }
 }

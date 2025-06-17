@@ -10,6 +10,5 @@ public class UpdatePersonelCommandValidator : AbstractValidator<UpdatePersonelCo
         RuleFor(c => c.FirstName).NotEmpty();
         RuleFor(c => c.LastName).NotEmpty();
         RuleFor(c => c.NationalId).NotEmpty();
-        RuleFor(c => c.IsMale).NotEmpty();
     }
 }
