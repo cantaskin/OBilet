@@ -36,10 +36,13 @@ public class CreateTicketCommand : IRequest<CreatedTicketResponse>,  ICacheRemov
         private readonly BusServiceBusinessRules _busServiceBusinessRules;
         private readonly IBusServiceRepository _busServiceRepository;
         private readonly BusServiceStationBusinessRules _busServiceStationBusinessRules;
+
+        private readonly IUserRepository _userRepository;
+
         private readonly TicketBusinessRules _ticketBusinessRules;
 
         public CreateTicketCommandHandler(IMapper mapper, ITicketRepository ticketRepository,
-                                         TicketBusinessRules ticketBusinessRules, ISeatRepository seatRepository, IBusServiceRepository busServiceRepository, IBusServiceStationRepository busServiceStationRepository, BusServiceBusinessRules busServiceBusinessRules, BusServiceStationBusinessRules busServiceStationBusinessRules)
+                                         TicketBusinessRules ticketBusinessRules, ISeatRepository seatRepository, IBusServiceRepository busServiceRepository, IBusServiceStationRepository busServiceStationRepository, BusServiceBusinessRules busServiceBusinessRules, BusServiceStationBusinessRules busServiceStationBusinessRules, IUserRepository userRepository)
         {
             _mapper = mapper;
             _ticketRepository = ticketRepository;
@@ -49,11 +52,16 @@ public class CreateTicketCommand : IRequest<CreatedTicketResponse>,  ICacheRemov
             _busServiceStationRepository = busServiceStationRepository;
             _busServiceBusinessRules = busServiceBusinessRules;
             _busServiceStationBusinessRules = busServiceStationBusinessRules;
+            _userRepository = userRepository;
         }
 
         public async Task<CreatedTicketResponse> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
         {
             Ticket ticket = _mapper.Map<Ticket>(request);
+
+            var user = await _userRepository.GetAsync(u => u.Id == request.UserId, cancellationToken: cancellationToken);
+            if (user is null)
+                throw new ArgumentException("User must exist.", nameof(request.UserId));
 
             var busService = await _busServiceRepository.GetAsync(bs => bs.Id == request.BusServiceId, cancellationToken: cancellationToken);
             await _busServiceBusinessRules.BusServiceShouldExistWhenSelected(busService);
